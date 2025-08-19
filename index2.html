@@ -28,7 +28,7 @@
 
     <div class="w-full max-w-xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 md:p-12">
         <div class="text-center mb-8">
-            <!-- Logo Added Here -->
+            <!-- Logo -->
             <img src="https://hae-novinpars.ir/uploads/9f4afe7a23054f0981b0484470ace10c.w_244,h_119,r_k.png.webp" 
                  alt="HAE Logo" 
                  class="mx-auto mb-6 h-16 w-auto"
@@ -40,7 +40,6 @@
 
         <!-- Input Section -->
         <div class="flex flex-col sm:flex-row gap-3 mb-6">
-            <!-- Placeholder updated -->
             <input type="text" id="trackingInput" class="flex-grow bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition placeholder:text-right" placeholder="مثال: HAE-A5B4C3" autocomplete="off">
             <button id="trackBtn" class="w-full sm:w-auto text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-8 py-4 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform transform hover:scale-105">
                 پیگیری
@@ -60,6 +59,15 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Quick Access Services Section -->
+        <div class="mt-10 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <h2 class="text-center text-xl font-semibold text-gray-700 dark:text-gray-300 mb-5">دسترسی سریع به خدمات</h2>
+            <div id="quickAccessContainer" class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <!-- Quick access buttons will be dynamically inserted here -->
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -71,6 +79,7 @@
         const statusTitle = document.getElementById('statusTitle');
         const statusDescription = document.getElementById('statusDescription');
         const statusTimestamp = document.getElementById('statusTimestamp');
+        const quickAccessContainer = document.getElementById('quickAccessContainer');
 
         // --- SVG Icons for different statuses ---
         const icons = {
@@ -80,46 +89,32 @@
             'error': `<svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
         };
 
-        // --- Database of Tracking Codes and their Statuses (Codes updated to HAE) ---
+        // --- Database of Tracking Codes ---
         const trackingData = {
-            "HAE-A5B4C3": {
-                status: "تکمیل شده",
-                type: "completed",
-                description: "سفارش کارت بازرگانی شما تکمیل شده و بزودی برای شما توسط پست ارسال خواهد شد.",
-                timestamp: "۱ مرداد ۱۴۰۴، ساعت ۱۶:۳۰"
-            },
-            "HAE-D8E9F1": {
-                status: "در حال انجام",
-                type: "in_progress",
-                description: "تکنسین‌های ما در حال بررسی و عیب‌یابی دستگاه شما هستند. به زودی شما را در جریان قرار خواهیم داد.",
-                timestamp: "۲ مرداد ۱۴۰۴، ساعت ۰۹:۱۵"
-            },
-            "HAE-G2H3I4": {
-                status: "در انتظار",
-                type: "pending",
-                description: "درخواست سرویس شما دریافت شده و در انتظار تخصیص به یک تکنسین می‌باشد.",
-                timestamp: "۲ مرداد ۱۴۰۴، ساعت ۰۸:۰۵"
-            },
-             "HAE-X1Y2Z3": {
-                status: "در حالت تعلیق: منتظر مدارک",
-                type: "error",
-                description: "انجام سرویس به طور موقت متوقف شده است. ما منتظر رسیدن یک قطعه خاص هستیم. زمان تخمینی رسیدن: ۲ روز کاری.",
-                timestamp: "۳۰ تیر ۱۴۰۴، ساعت ۱۱:۰۰"
-            }
+            "HAE-A5B4C3": { status: "تکمیل شده", type: "completed", description: "سفارش کارت بازرگانی شما تکمیل شده و بزودی برای شما توسط پست ارسال خواهد شد.", timestamp: "۱ مرداد ۱۴۰۴، ساعت ۱۶:۳۰" },
+            "HAE-D8E9F1": { status: "در حال انجام", type: "in_progress", description: "تکنسین‌های ما در حال بررسی و عیب‌یابی دستگاه شما هستند. به زودی شما را در جریان قرار خواهیم داد.", timestamp: "۲ مرداد ۱۴۰۴، ساعت ۰۹:۱۵" },
+            "HAE-G2H3I4": { status: "در انتظار", type: "pending", description: "درخواست سرویس شما دریافت شده و در انتظار تخصیص به یک تکنسین می‌باشد.", timestamp: "۲ مرداد ۱۴۰۴، ساعت ۰۸:۰۵" },
+            "HAE-X1Y2Z3": { status: "در حالت تعلیق: منتظر مدارک", type: "error", description: "انجام سرویس به طور موقت متوقف شده است. ما منتظر رسیدن مدارک تکمیلی هستیم.", timestamp: "۳۰ تیر ۱۴۰۴، ساعت ۱۱:۰۰" }
         };
+
+        // --- Quick Access Button Data (New button added) ---
+        const quickAccessServices = [
+            { title: "ثبت برند", url: "https://hae-novinpars.ir/brand-registration/" },
+            { title: "ثبت شرکت", url: "https://hae-novinpars.ir/register-company/" },
+            { title: "اخذ مجوز ها", url: "https://hae-novinpars.ir/mojavez-kasb-tasis-bahrebardari/" },
+            { title: "صورتجلسه تغییرات", url: "https://hae-novinpars.ir/sorat-jalase-taghirat-sherkat/" },
+            { title: "پلمپ دفاتر", url: "https://hae-novinpars.ir/polomp-daftar/" },
+            { title: "کد اقتصادی", url: "https://hae-novinpars.ir/economic-code-registration/" }
+        ];
         
         /**
          * Displays the status information in the result area.
-         * @param {object} data - The status data object.
          */
         function displayStatus(data) {
-            // Set content
             statusTitle.textContent = data.status;
             statusDescription.textContent = data.description;
             statusTimestamp.textContent = `آخرین به‌روزرسانی: ${data.timestamp}`;
             statusIcon.innerHTML = icons[data.type] || icons['error'];
-
-            // Set colors based on status type
             const colorClasses = {
                 pending: 'text-yellow-600 dark:text-yellow-400',
                 in_progress: 'text-orange-600 dark:text-orange-400',
@@ -127,10 +122,8 @@
                 error: 'text-red-600 dark:text-red-400'
             };
             statusTitle.className = `text-xl font-bold ${colorClasses[data.type]}`;
-            
-            // Animate the result box into view
             statusResult.classList.remove('opacity-0', 'max-h-0');
-            statusResult.classList.add('opacity-100', 'max-h-96'); // Use max-h for smooth transition
+            statusResult.classList.add('opacity-100', 'max-h-96');
         }
 
         /**
@@ -138,41 +131,44 @@
          */
         function handleTrack() {
             const code = trackingInput.value.trim().toUpperCase();
-
             if (!code) {
-                displayStatus({
-                    status: "کد نامعتبر",
-                    type: "error",
-                    description: "لطفا یک کد رهگیری در کادر بالا وارد کنید.",
-                    timestamp: new Date().toLocaleString('fa-IR')
-                });
+                displayStatus({ status: "کد نامعتبر", type: "error", description: "لطفا یک کد رهگیری در کادر بالا وارد کنید.", timestamp: new Date().toLocaleString('fa-IR') });
                 return;
             }
-
             const data = trackingData[code];
-
             if (data) {
                 displayStatus(data);
             } else {
-                displayStatus({
-                    status: "کد یافت نشد",
-                    type: "error",
-                    description: "کد رهگیری وارد شده با هیچ یک از سوابق ما مطابقت ندارد. لطفا کد را بررسی کرده و دوباره تلاش کنید.",
-                    timestamp: new Date().toLocaleString('fa-IR')
-                });
+                displayStatus({ status: "کد یافت نشد", type: "error", description: "کد رهگیری وارد شده با هیچ یک از سوابق ما مطابقت ندارد. لطفا کد را بررسی کرده و دوباره تلاش کنید.", timestamp: new Date().toLocaleString('fa-IR') });
             }
         }
 
-        // --- Event Listeners ---
-        trackBtn.addEventListener('click', handleTrack);
+        /**
+         * Creates and appends quick access buttons to the container.
+         */
+        function createQuickAccessButtons() {
+            quickAccessServices.forEach(service => {
+                const link = document.createElement('a');
+                link.href = service.url;
+                link.target = "_blank"; // Open in a new tab
+                link.rel = "noopener noreferrer";
+                link.className = "w-full text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-3 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800 transition-transform transform hover:scale-105 block";
+                link.textContent = service.title;
+                quickAccessContainer.appendChild(link);
+            });
+        }
 
-        // Allow pressing 'Enter' in the input field to trigger the track button
-        trackingInput.addEventListener('keyup', function(event) {
+        // --- Event Listeners and Initializers ---
+        trackBtn.addEventListener('click', handleTrack);
+        trackingInput.addEventListener('keyup', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 trackBtn.click();
             }
         });
+
+        // Create the quick access buttons when the page loads
+        document.addEventListener('DOMContentLoaded', createQuickAccessButtons);
     </script>
 
 </body>
